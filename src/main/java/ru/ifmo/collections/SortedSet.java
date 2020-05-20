@@ -1,7 +1,6 @@
 package ru.ifmo.collections;
 
-import java.util.AbstractSet;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * Represents sorted set of unique values.
@@ -16,21 +15,51 @@ import java.util.Comparator;
  *
  * @param <T> set contents type
  */
-public abstract class SortedSet<T> extends AbstractSet<T> {
-    // private final Map<???, ???> contents; TODO decide Map implementation and key/value types. "???" is used just as an example
+public class SortedSet<T> extends AbstractSet<T> {
+    private final Map<T, Object> contents;
+
+    private SortedSet() {
+        this.contents = new TreeMap<>();
+    }
+
+    private SortedSet(Comparator<T> comparator) {
+        this.contents = new TreeMap<>(comparator);
+    }
+
     public static <T> SortedSet<T> create() {
-        throw new UnsupportedOperationException(); // TODO implement
+        return new SortedSet<>();
     }
 
     public static <T> SortedSet<T> from(Comparator<T> comparator) {
-        throw new UnsupportedOperationException(); // TODO implement
+        return new SortedSet<>(comparator);
     }
 
-    public T[] getSorted() {
-        throw new UnsupportedOperationException(); // TODO implement
+    public List<T> getSorted() {
+        return new ArrayList<>(contents.keySet());
     }
 
-    public T[] getReversed() {
-        throw new UnsupportedOperationException(); // TODO implement
+    public List<T> getReversed() {
+        List<T> list = new ArrayList<>(contents.keySet());
+        Collections.reverse(list);
+        return list;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return contents.keySet().iterator();
+    }
+
+    @Override
+    public int size() {
+        return contents.size();
+    }
+
+    @Override
+    public boolean add(T key) {
+        if (contents.containsKey(key)) {
+            return false;
+        }
+        contents.put(key, null);
+        return true;
     }
 }
